@@ -62,4 +62,10 @@ public class ScheduleService {
         ScheduleRepository scheduleRepository = new ScheduleRepository(jdbcTemplate);
         return scheduleRepository.update(schdule_id, requestDto);
     }
+
+    // 선택한 일정 삭제
+    public void deleteSchedule(int schedule_id, ScheduleRequestDto requestDto){
+        ScheduleRepository scheduleRepository = new ScheduleRepository(jdbcTemplate);
+        scheduleRepository.delete(schedule_id, requestDto);
+    }
 }

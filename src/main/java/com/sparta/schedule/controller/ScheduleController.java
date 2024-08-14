@@ -54,4 +54,10 @@ public class ScheduleController {
         ScheduleService scheduleService = new ScheduleService(jdbcTemplate);
         return scheduleService.updateSchedule(schedule_id, requestDto);
     }
+
+    @DeleteMapping("/schedule/{schedule_id}")
+    public void deleteSchedule(@PathVariable int schedule_id, @RequestBody ScheduleRequestDto requestDto){
+        ScheduleService scheduleService = new ScheduleService(jdbcTemplate);
+        scheduleService.deleteSchedule(schedule_id, requestDto);
+    }
 }

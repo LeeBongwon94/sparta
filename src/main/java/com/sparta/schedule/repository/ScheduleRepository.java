@@ -131,6 +131,23 @@ public class ScheduleRepository {
         }
     }
 
+    // 일정 삭제
+    public void delete(
+            @PathVariable int schedule_id,
+            @RequestBody ScheduleRequestDto requestDto)
+    {
+        if(findById(schedule_id)) {
+            if (requestDto.getPassword().equals(selectOne(schedule_id).getPassword())) {
+                String sql = "DELETE FROM schedule WHERE schedule_id = ?";
+                jdbcTemplate.update(sql, schedule_id);
+            } else {
+                System.out.println("비밀번호가 일치하지 않습니다.");
+            }
+        } else {
+            throw new IllegalArgumentException("선택한 일정이 존재하지 않습니다.");
+        }
+    }
+
     public boolean findById(int schedule_id){
         String sql = "SELECT * FROM schedule WHERE schedule_id = ?";
 
