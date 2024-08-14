@@ -7,6 +7,9 @@ import com.sparta.schedule.repository.ScheduleRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
+import java.util.List;
+
 @Service
 public class ScheduleService {
 
@@ -34,5 +37,23 @@ public class ScheduleService {
     public ScheduleResponseDto getSchedule(int schedule_id){
         ScheduleRepository scheduleRepository = new ScheduleRepository(jdbcTemplate);
         return new ScheduleResponseDto(scheduleRepository.selectOne(schedule_id));
+    }
+
+    // 모든 일정 조회
+    public List<ScheduleResponseDto> getSchedule(){
+        ScheduleRepository scheduleRepository = new ScheduleRepository(jdbcTemplate);
+        return scheduleRepository.selectAll();
+    }
+
+    // manager로 일정 조회
+    public List<ScheduleResponseDto> getSchedule(String manager){
+        ScheduleRepository scheduleRepository = new ScheduleRepository(jdbcTemplate);
+        return scheduleRepository.selectAll(manager);
+    }
+
+    // 수정일로 일정 조회
+    public List<ScheduleResponseDto> getSchedule(Date updated_at){
+        ScheduleRepository scheduleRepository = new ScheduleRepository(jdbcTemplate);
+        return scheduleRepository.selectAll(updated_at);
     }
 }

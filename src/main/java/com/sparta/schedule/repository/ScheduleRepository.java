@@ -1,13 +1,15 @@
 package com.sparta.schedule.repository;
 
+import com.sparta.schedule.dto.ScheduleResponseDto;
 import com.sparta.schedule.entity.Schedule;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.PreparedStatement;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.List;
 
 public class ScheduleRepository {
     private final JdbcTemplate jdbcTemplate;
@@ -57,5 +59,53 @@ public class ScheduleRepository {
                 return null;
             }
         }, schedule_id);
+    }
+
+    // 모든 일정 조회
+    public List<ScheduleResponseDto> selectAll(){
+        String sql = "SELECT * FROM schedule ORDER BY updated_at desc";
+
+        return jdbcTemplate.query(sql, new RowMapper<ScheduleResponseDto>() {
+            @Override
+            public ScheduleResponseDto mapRow(ResultSet rs, int rowNum) throws SQLException {
+                // SQL 의 결과로 받아온 Memo 데이터들을 MemoResponseDto 타입으로 변환해줄 메서드
+                int id = rs.getInt("schedule_id");
+                String manager = rs.getString("manager");
+                Date myDate = rs.getDate("myDate");
+                String contents = rs.getString("contents");
+                return new ScheduleResponseDto(id, manager, myDate, contents);
+            }
+        });
+    }
+
+    // 입력한 manager가 포함된 일정 모두 조회
+    public List<ScheduleResponseDto> selectAll(@PathVariable String manager){
+        String sql = "SELECT * FROM schedule WHERE manager = ? ORDER BY updated_at desc";
+
+        return jdbcTemplate.query(sql, (rs, rowNum) -> {
+            // SQL 의 결과로 받아온 Memo 데이터들을 MemoResponseDto 타입으로 변환해줄 메서드
+            int id = rs.getInt("schedule_id");
+            String manager1 = rs.getString("manager");
+            Date myDate = rs.getDate("myDate");
+            String contents = rs.getString("contents");
+            return new ScheduleResponseDto(id, manager1, myDate, contents);
+        }, manager);
+    }
+
+    // 입력한 수정일이 포함된 일정 모두 조회
+    public List<ScheduleResponseDto> selectAll(@PathVariable Date updated_at){
+        String sql = "SELECT * FROM schedule WHERE DATE(updated_at) = ? ORDER BY updated_at desc";
+
+        return jdbcTemplate.query(sql, new RowMapper<ScheduleResponseDto>() {
+            @Override
+            public ScheduleResponseDto mapRow(ResultSet rs, int rowNum) throws SQLException {
+                // SQL 의 결과로 받아온 Memo 데이터들을 MemoResponseDto 타입으로 변환해줄 메서드
+                int id = rs.getInt("schedule_id");
+                String manager = rs.getString("manager");
+                Date myDate = rs.getDate("myDate");
+                String contents = rs.getString("contents");
+                return new ScheduleResponseDto(id, manager, myDate, contents);
+            }
+        }, updated_at);
     }
 }
