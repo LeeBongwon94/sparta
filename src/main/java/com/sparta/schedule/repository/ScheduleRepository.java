@@ -38,4 +38,24 @@ public class ScheduleRepository {
 
         return schedule;
     }
+
+    // schedule_id로 조회
+    public Schedule selectOne(@PathVariable int schedule_id){
+        String sql = "SELECT * FROM schedule WHERE schedule_id = ?";
+
+        return jdbcTemplate.query(sql, resultSet -> {
+            if(resultSet.next()){
+                Schedule schedule = new Schedule();
+                schedule.setSchedule_id(schedule_id);
+                schedule.setManager(resultSet.getString("manager"));
+                schedule.setContents(resultSet.getString("contents"));
+                schedule.setMyDate(resultSet.getDate("myDate"));
+                schedule.setPassword(resultSet.getString("password"));
+
+                return schedule;
+            } else {
+                return null;
+            }
+        }, schedule_id);
+    }
 }

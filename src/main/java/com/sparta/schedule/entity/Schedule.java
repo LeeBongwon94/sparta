@@ -17,6 +17,8 @@ public class Schedule {
     private Date created_at;
     private Date updated_at;
 
+    public Schedule(){};
+
     public Schedule(ScheduleRequestDto requestDto){
         this.manager = requestDto.getManager();
         this.myDate = requestDto.getMyDate();

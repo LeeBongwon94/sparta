@@ -29,4 +29,10 @@ public class ScheduleService {
 
         return scheduleResponseDto;
     }
+
+    // ID로 일정 조회
+    public ScheduleResponseDto getSchedule(int schedule_id){
+        ScheduleRepository scheduleRepository = new ScheduleRepository(jdbcTemplate);
+        return new ScheduleResponseDto(scheduleRepository.selectOne(schedule_id));
+    }
 }

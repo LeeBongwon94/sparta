@@ -21,4 +21,10 @@ public class ScheduleController {
         ScheduleService scheduleService = new ScheduleService(jdbcTemplate);
         return scheduleService.createSchedule(requestDto);
     }
+
+    @GetMapping("/schedule/{schedule_id}")
+    public ScheduleResponseDto getSchedule(@PathVariable int schedule_id){
+        ScheduleService scheduleService = new ScheduleService(jdbcTemplate);
+        return scheduleService.getSchedule(schedule_id);
+    }
 }
