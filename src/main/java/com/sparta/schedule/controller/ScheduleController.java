@@ -48,4 +48,10 @@ public class ScheduleController {
         ScheduleService scheduleService = new ScheduleService(jdbcTemplate);
         return scheduleService.getSchedule(updated_at);
     }
+
+    @PutMapping("/schedule/{schedule_id}")
+    public ScheduleResponseDto updateSchedule(@PathVariable int schedule_id, @RequestBody ScheduleRequestDto requestDto){
+        ScheduleService scheduleService = new ScheduleService(jdbcTemplate);
+        return scheduleService.updateSchedule(schedule_id, requestDto);
+    }
 }

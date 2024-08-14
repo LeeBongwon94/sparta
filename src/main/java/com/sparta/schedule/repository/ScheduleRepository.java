@@ -1,5 +1,6 @@
 package com.sparta.schedule.repository;
 
+import com.sparta.schedule.dto.ScheduleRequestDto;
 import com.sparta.schedule.dto.ScheduleResponseDto;
 import com.sparta.schedule.entity.Schedule;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -107,5 +108,35 @@ public class ScheduleRepository {
                 return new ScheduleResponseDto(id, manager, myDate, contents);
             }
         }, updated_at);
+    }
+
+    // 일정 수정
+    public ScheduleResponseDto update(
+            @PathVariable int schedule_id,
+            @RequestBody ScheduleRequestDto requestDto)
+    {
+        if(findById(schedule_id)) {
+            if(requestDto.getPassword().equals(selectOne(schedule_id).getPassword())) {
+                String sql = "UPDATE schedule SET manager = ?, contents = ? WHERE schedule_id = ?";
+
+                jdbcTemplate.update(sql, requestDto.getManager(), requestDto.getContents(), schedule_id);
+                // 반환값이 객체인데, 일정을 수정할 때 일정(날짜)은 데이터가 안넘어와서 기존 데이터를 불러오기위해 selectOne(schedule_id).getMyDate() 사용.
+                return new ScheduleResponseDto(schedule_id, requestDto.getManager(), selectOne(schedule_id).getMyDate(), requestDto.getContents());
+            } else {
+                System.out.println("비밀번호가 일치하지 않습니다.");
+                return null;
+            }
+        } else {
+            throw new IllegalArgumentException("선택한 일정이 존재하지 않습니다.");
+        }
+    }
+
+    public boolean findById(int schedule_id){
+        String sql = "SELECT * FROM schedule WHERE schedule_id = ?";
+
+        return jdbcTemplate.query(sql, resultSet -> {
+            if(resultSet.next())    return true;
+            else                    return false;
+        }, schedule_id);
     }
 }

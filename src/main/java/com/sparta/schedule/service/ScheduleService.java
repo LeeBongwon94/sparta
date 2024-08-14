@@ -56,4 +56,10 @@ public class ScheduleService {
         ScheduleRepository scheduleRepository = new ScheduleRepository(jdbcTemplate);
         return scheduleRepository.selectAll(updated_at);
     }
+
+    // 선택한 일정 수정
+    public ScheduleResponseDto updateSchedule(int schdule_id, ScheduleRequestDto requestDto){
+        ScheduleRepository scheduleRepository = new ScheduleRepository(jdbcTemplate);
+        return scheduleRepository.update(schdule_id, requestDto);
+    }
 }
